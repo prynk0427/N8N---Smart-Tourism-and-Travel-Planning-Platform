@@ -1,0 +1,369 @@
+{
+  "name": "01 - Customer Registration & Preferences",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "customer-registration",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        0
+      ],
+      "id": "8f2103a1-72f3-4700-ab47-04824ea4af06",
+      "name": "Webhook",
+      "webhookId": "8e442000-19c3-43e9-b7a1-edb29b24babf"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19396e93-36fa-4ffb-91e9-ba63da8c200b",
+              "name": "name",
+              "value": "={{$json.body.name}}",
+              "type": "string"
+            },
+            {
+              "id": "8bc4a92d-29cd-428d-ac1b-0e19fe7a417d",
+              "name": "email",
+              "value": "={{$json.body.email}}",
+              "type": "string"
+            },
+            {
+              "id": "39cd14cd-c7d2-4287-bc0c-9124a43068ca",
+              "name": "phone",
+              "value": "={{$json.body.phone}}",
+              "type": "string"
+            },
+            {
+              "id": "1fdf71fa-2fec-47f1-8e59-1c7cd27a4684",
+              "name": "destination",
+              "value": "={{$json.body.destination}}",
+              "type": "string"
+            },
+            {
+              "id": "6f30d942-1318-4983-bf0f-7ceb5779b15d",
+              "name": "travel_dates",
+              "value": "={{$json.body.destination}}",
+              "type": "string"
+            },
+            {
+              "id": "4481e3f9-d5b5-4f76-bdc7-493e15aa7ef5",
+              "name": "interests",
+              "value": "={{$json.body.interests}}",
+              "type": "string"
+            },
+            {
+              "id": "9c8a1b91-5d82-4341-80ff-71a35cbf4d87",
+              "name": "hotel_type",
+              "value": "={{$json.body.hotel_type}}",
+              "type": "string"
+            },
+            {
+              "id": "216fae64-f9da-4fa7-8d63-da6f401f1f33",
+              "name": "transport",
+              "value": "={{$json.body.transport}}",
+              "type": "string"
+            },
+            {
+              "id": "2ebf0da1-d197-45a1-a1c4-5032ac392933",
+              "name": "budget",
+              "value": "={{$json.body.budget}}",
+              "type": "number"
+            },
+            {
+              "id": "3142c175-90df-4aeb-afac-07cb7dcc4829",
+              "name": "travelers",
+              "value": "={{$json.body.travelers}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        288,
+        0
+      ],
+      "id": "3340f8b4-6df5-42c1-aa37-19872da976a3",
+      "name": "Prepare Customer Data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are an intelligent travel customer profiling assistant.\n\nAnalyze the following customer information:\n\nName: {{$json.name}}\nEmail: {{$json.email}}\nBudget: {{$json.budget}}\nNumber of Travelers: {{$json.travelers}}\nDestination: {{$json.destination}}\nTravel Dates: {{$json.travel_dates}}\nInterests: {{$json.interests}}\nHotel Preference: {{$json.hotel_type}}\nTransport Preference: {{$json.transport}}\n\nCreate a concise customer travel profile.\n\nReturn:\n1. Travel Type\n2. Budget Category\n3. Preferred Activities\n4. Hotel Preference\n5. Transport Preference\n6. Important Planning Considerations\n\nKeep the response concise and useful for a travel agency."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        512,
+        0
+      ],
+      "id": "397bf36f-f023-4599-840f-00b81714686d",
+      "name": "AI Customer Profile",
+      "credentials": {
+        "openAiApi": {
+          "id": "8NiidUfaOVNvoZrv",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I",
+          "mode": "list",
+          "cachedResultName": "Smart Tourism Travel Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Webhook').item.json.body.name }}",
+            "Email": "={{ $('Webhook').item.json.body.email }}",
+            "Phone": "={{ $('Webhook').item.json.body.phone }}",
+            "Budget": "={{ $('Webhook').item.json.body.budget }}",
+            "Destination": "={{ $('Webhook').item.json.body.destination }}",
+            "Travel_Dates": "={{ $('Webhook').item.json.body.travel_dates }}",
+            "Interests": "={{ $('Webhook').item.json.body.interests }}",
+            "Hotel_Type": "={{ $('Webhook').item.json.body.hotel_type }}",
+            "Transport": "={{ $('Webhook').item.json.body.transport }}",
+            "Travelers": "={{ $('Webhook').item.json.body.travelers }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Travelers",
+              "displayName": "Travelers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Destination",
+              "displayName": "Destination",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Travel_Dates",
+              "displayName": "Travel_Dates",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interests",
+              "displayName": "Interests",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hotel_Type",
+              "displayName": "Hotel_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Transport",
+              "displayName": "Transport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        0
+      ],
+      "id": "4148f56d-f4e4-4fff-a0f2-a14a1e96cf78",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LVuzP8VUHvsuQNq5",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "Travel Registration Confirmed ✈️",
+        "message": "=<h2>✈️ Travel Registration Confirmed</h2>\n\n<p>\nHello <strong>{{ $('Webhook').item.json.body.name }}</strong>,\n</p>\n\n<p>\nThank you for registering with the\n<strong>Smart Tourism &amp; Travel Planning Platform</strong>.\n</p>\n\n<p>\nYour travel preferences have been successfully received.\nOur AI-powered travel planning system will now analyze your requirements\nand prepare suitable recommendations.\n</p>\n\n<h3>🧳 Your Travel Details</h3>\n\n<p>\n<strong>📍 Destination:</strong>\n{{ $('Webhook').item.json.body.destination }}\n<br><br>\n\n<strong>📅 Travel Dates:</strong>\n{{ $('Webhook').item.json.body.travel_dates }}\n<br><br>\n\n<strong>👥 Number of Travelers:</strong>\n{{ $('Webhook').item.json.body.travelers }}\n<br><br>\n\n<strong>💰 Budget:</strong>\n₹{{ $('Webhook').item.json.body.budget }}\n</p>\n\n<h3>🎯 Your Preferences</h3>\n\n<p>\n<strong>Interests:</strong>\n{{ $('Webhook').item.json.body.interests }}\n<br><br>\n\n<strong>Hotel Preference:</strong>\n{{ $('Webhook').item.json.body.hotel_type }}\n<br><br>\n\n<strong>Transport Preference:</strong>\n{{ $('Webhook').item.json.body.transport }}\n</p>\n\n<hr>\n\n<p>\nWe will use these preferences to create a personalized travel experience\nfor you.\n</p>\n\n<p>\nHave a great journey ahead! ✈️🌍\n</p>\n\n<p>\n<strong>Regards,</strong><br>\nSmart Tourism Travel Team\n</p>\n\n<p style=\"color:gray; font-size:12px;\">\nThis is an automated confirmation email.\n</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "ecbf3ae5-6763-48b4-8ea8-ae8b51be6ec4",
+      "name": "Send Registration Confirmation",
+      "webhookId": "884ae56c-4be7-49fa-b173-1d4c798f5fc8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0JP43whhZmfNY2hx",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Customer Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Customer Data": {
+      "main": [
+        [
+          {
+            "node": "AI Customer Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Customer Profile": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send Registration Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "fb9ec119-2cd4-4399-9417-d4e227773f2d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f0a793f5b173af5808bfb4031c01c004f22c795ed3419b7cb30be1d388516fc"
+  },
+  "nodeGroups": [],
+  "id": "dLwgcs6PUsec9m5l",
+  "tags": []
+}

@@ -1,0 +1,574 @@
+{
+  "name": "03 - Booking & Itinerary Management",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-itinerary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "f683d189-9979-4afc-b17e-83acdbb0a2c0",
+      "name": "Webhook",
+      "webhookId": "d223ea5f-d168-4b18-8bd2-7466a0c04783"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.body.destination}}",
+                    "rightValue": "Manali",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "838b528f-9e42-499c-890d-8f2a61ebfe02"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Manali"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "25ad4c8f-b03e-44f2-bb92-68c0c9b4ebb0",
+                    "leftValue": "={{$json.body.destination}}",
+                    "rightValue": "Shimla",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Shimla"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4a434774-500b-455d-a457-67d0d8a1f65c",
+                    "leftValue": "={{$json.body.destination}}",
+                    "rightValue": "Goa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Goa"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -112
+      ],
+      "id": "ab909573-6b9b-4d28-9416-fcfe1b481f2f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a smart tourism booking assistant.\n\nUse the customer's booking details:\n\nName: {{$json.body.name}}\nEmail: {{$json.body.email}}\nDestination: {{$json.body.destination}}\nTravelers: {{$json.body.travelers}}\nStart Date: {{$json.body.start_date}}\nEnd Date: {{$json.body.end_date}}\nBooking Type: {{$json.body.booking_type}}\nHotel: {{$json.body.hotel}}\nRoom Type: {{$json.body.room_type}}\nTransport: {{$json.body.transport}}\nBudget: {{$json.body.budget}}\n\nCreate a personalized travel itinerary.\n\nInclude:\n1. Booking summary\n2. Day-by-day itinerary\n3. Hotel information\n4. Transport information\n5. Recommended activities\n6. Estimated daily expenses\n7. Total estimated cost\n8. Whether the plan fits the customer's budget\n\nKeep the itinerary practical and concise.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "ee3ab4c8-2608-4366-900e-4999fe9d610d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        528,
+        144
+      ],
+      "id": "4ce0a471-f2db-4821-996a-85ed1ecec780",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "8NiidUfaOVNvoZrv",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I",
+          "mode": "list",
+          "cachedResultName": "Smart Tourism Travel Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KcOK7k5ILjeQbMgxG8GszdtEuz1fzZ4p8NoWoNq753I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Booking_ID": "={{ $('Webhook').item.json.body.customer_id }}",
+            "Booking_Type": "={{ $('Webhook').item.json.body.booking_type }}",
+            "Hotel": "={{ $('Webhook').item.json.body.hotel }}",
+            "Room_Type": "={{ $('Webhook').item.json.body.room_type }}",
+            "Start_Date": "={{ $('Webhook').item.json.body.start_date }}",
+            "End_Date": "={{ $('Webhook').item.json.body.end_date }}",
+            "Itinerary": "={{ $('AI Agent').item.json.output }}",
+            "Budget_Status": "Within Budget",
+            "Estimated_Cost": "39000"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Travelers",
+              "displayName": "Travelers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Destination",
+              "displayName": "Destination",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Travel_Dates",
+              "displayName": "Travel_Dates",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interests",
+              "displayName": "Interests",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hotel_Type",
+              "displayName": "Hotel_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Transport",
+              "displayName": "Transport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hotel_Cost",
+              "displayName": "Hotel_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Transport_Cost",
+              "displayName": "Transport_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Food_Cost",
+              "displayName": "Food_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Activity_Cost",
+              "displayName": "Activity_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total_Cost",
+              "displayName": "Total_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Top_Activities",
+              "displayName": "Top_Activities",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Booking_Type",
+              "displayName": "Booking_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget_Status",
+              "displayName": "Budget_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Booking_ID",
+              "displayName": "Booking_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hotel",
+              "displayName": "Hotel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Room_Type",
+              "displayName": "Room_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Start_Date",
+              "displayName": "Start_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "End_Date",
+              "displayName": "End_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Itinerary",
+              "displayName": "Itinerary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estimated_Cost",
+              "displayName": "Estimated_Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        -96
+      ],
+      "id": "cefcd838-f558-47ad-bf34-ee1bb143f649",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LVuzP8VUHvsuQNq5",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "Booking Confirmation & Travel Itinerary",
+        "message": "=<h2>Booking Confirmation</h2>  <p>Hi <strong>{{ $('Webhook').item.json.body.name }}</strong>,</p>  <p>Thank you for using our Smart Tourism Travel Platform.</p>  <p>Your booking request has been successfully processed. Please find your travel details below:</p>  <h3>Travel Details</h3>  <p> <strong>Destination:</strong> {{ $('Webhook').item.json.body.destination }}<br> <strong>Travelers:</strong> {{ $('Webhook').item.json.body.travelers }}<br> <strong>Travel Dates:</strong> {{ $('Webhook').item.json.body.start_date }} to {{ $('Webhook').item.json.body.end_date }} </p>  <h3>Booking Details</h3>  <p> <strong>Hotel:</strong> {{ $('Webhook').item.json.body.hotel }}<br> <strong>Room Type:</strong> {{ $('Webhook').item.json.body.room_type }}<br> <strong>Transport:</strong> {{ $('Webhook').item.json.body.transport }} </p>  <h3>Cost Summary</h3>  <p> <strong>Estimated Cost:</strong> ₹39,000<br> <strong>Budget Status:</strong> Within Budget </p>  <h3>Itinerary</h3>  <p>Your personalized itinerary has been generated successfully and is available in your booking record.</p>  <p>We hope you have a wonderful trip and an enjoyable travel experience.</p>  <p> <strong>Regards,</strong><br> Smart Tourism Travel Team </p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1024,
+        -96
+      ],
+      "id": "142618ca-58ae-4141-a31f-5b335143cbb8",
+      "name": "Send a message",
+      "webhookId": "3748ef1d-68fc-4d82-9514-8e38f1ac85c7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0JP43whhZmfNY2hx",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5e272fc7-b3d8-42e3-b6db-153b61734e87",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f0a793f5b173af5808bfb4031c01c004f22c795ed3419b7cb30be1d388516fc"
+  },
+  "nodeGroups": [],
+  "id": "vi1SX8FRBp2HIvhn",
+  "tags": []
+}

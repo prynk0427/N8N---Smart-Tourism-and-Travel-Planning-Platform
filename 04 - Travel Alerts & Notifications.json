@@ -1,0 +1,343 @@
+{
+  "name": "04 - Travel Alerts & Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "travel-alerts",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0a83b14a-0372-4225-a1d2-d193c43d48cb",
+      "name": "Webhook",
+      "webhookId": "1519e6b5-01a9-4067-8c03-0b5d06d52594"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "latitude",
+              "value": "32.2190"
+            },
+            {
+              "name": "longitude",
+              "value": "76.3234"
+            },
+            {
+              "name": "current",
+              "value": "temperature_2m,precipitation,rain,weather_code"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ecc24c66-e148-4e8a-b77b-c229a95497d9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3a31e480-67ea-4cfe-a890-6ff21073c91a",
+              "leftValue": "={{ $json.current.rain }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "e56a125a-1681-43c5-a75a-a490a5724531",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "=🌦️ Travel Weather Alert – {{ $('Webhook').item.json.body.destination }}",
+        "message": "=<h2>🌦️ Travel Weather Alert</h2>\n\n<p>Hello <strong>{{ $('Webhook').item.json.body.customer_name || $('Webhook').item.json.body.name || 'Traveler' }}</strong>,</p>\n\n<p>\nThis is an automated weather alert for your upcoming trip.\n</p>\n\n<hr>\n\n<h3>🧳 Trip Details</h3>\n\n<p>\n<strong>📍 Destination:</strong> {{ $('Webhook').item.json.body.destination }}<br>\n<strong>📅 Travel Dates:</strong> {{ $('Webhook').item.json.body.start_date }} to {{ $('Webhook').item.json.body.end_date }}\n</p>\n\n<h3>🌧️ Weather Update</h3>\n\n<p>\nRain has been detected at your destination. Please be prepared for wet weather conditions.\n</p>\n\n<h3>⚠️ Recommendations</h3>\n\n<ul>\n  <li>☔ Carry an umbrella or raincoat.</li>\n  <li>🌦️ Check local weather conditions before outdoor activities.</li>\n  <li>🗓️ Keep your travel plans flexible if required.</li>\n</ul>\n\n<p>\nHave a safe and enjoyable journey! ✈️\n</p>\n\n<p>\n<strong>Regards,</strong><br>\nSmart Tourism &amp; Travel Planning Platform\n</p>\n\n<hr>\n\n<p style=\"color:gray; font-size:12px;\">\nThis email was sent automatically by n8n.\n</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "75b3d12b-aa7d-4031-93f9-7e688fe4c312",
+      "name": "Send a message",
+      "webhookId": "b1648792-7a7e-435e-9126-2ad0677f1711",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0JP43whhZmfNY2hx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "=🌤️ Travel Weather Update – {{ $('Webhook').item.json.body.destination }}",
+        "message": "=<h2>🌤️ Travel Weather Update</h2>  <p> Hello <strong>{{ $('Webhook').item.json.body.customer_name || $('Webhook').item.json.body.name || 'Traveler' }}</strong>, </p>  <p> Good news! The current weather conditions at your travel destination look suitable for your upcoming trip. </p>  <hr>  <h3>🧳 Trip Details</h3>  <p> <strong>📍 Destination:</strong> {{ $('Webhook').item.json.body.destination }}<br> <strong>📅 Travel Dates:</strong> {{ $('Webhook').item.json.body.start_date }} to {{ $('Webhook').item.json.body.end_date }} </p>  <h3>☀️ Weather Status</h3>  <p> No significant weather alert has been detected at this time. </p>  <h3>✅ Travel Advice</h3>  <ul>   <li>Check the weather again before starting your journey.</li>   <li>Keep your essential travel documents ready.</li>   <li>Enjoy your trip and stay safe! ✈️</li> </ul>  <p> <strong>Regards,</strong><br> Smart Tourism &amp; Travel Planning Platform </p>  <hr>  <p style=\"color:gray; font-size:12px;\"> This is an automated travel notification sent by n8n. </p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        96
+      ],
+      "id": "a87b1813-97ea-40c2-9182-a8f97db8dded",
+      "name": "Send a message1",
+      "webhookId": "1fe8177b-d3cb-4821-83da-12918e8bf167",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0JP43whhZmfNY2hx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1896c758-67bc-4595-a409-eddb988e3bc5",
+              "name": "Notification_Status",
+              "value": "sent",
+              "type": "string"
+            },
+            {
+              "id": "565f0da5-0b11-4f3c-afd7-990198059a0a",
+              "name": "Notification_Type",
+              "value": "Weather Alert",
+              "type": "string"
+            },
+            {
+              "id": "8c218258-56b1-41b0-a6cf-beee77af9aa9",
+              "name": "Destination",
+              "value": "={{ $('Webhook').item.json.body.destination }}",
+              "type": "string"
+            },
+            {
+              "id": "b505ef5d-1385-4b75-916b-f6f61bd6e7ee",
+              "name": "Message",
+              "value": "Travel weather notification sent successfully.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "cb211432-9805-46f6-abc6-c8680d2e882f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1896c758-67bc-4595-a409-eddb988e3bc5",
+              "name": "Notification_Status",
+              "value": "sent",
+              "type": "string"
+            },
+            {
+              "id": "565f0da5-0b11-4f3c-afd7-990198059a0a",
+              "name": "Notification_Type",
+              "value": "Weather Alert",
+              "type": "string"
+            },
+            {
+              "id": "8c218258-56b1-41b0-a6cf-beee77af9aa9",
+              "name": "Destination",
+              "value": "={{ $('Webhook').item.json.body.destination }}",
+              "type": "string"
+            },
+            {
+              "id": "b505ef5d-1385-4b75-916b-f6f61bd6e7ee",
+              "name": "Message",
+              "value": "Travel weather notification sent successfully.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        896,
+        96
+      ],
+      "id": "e4f8f963-b92d-4645-8a60-15ed6417a78d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "0b3045b459be79b05b34730ab0574d3343624580373b5cf864cdf7fd959dbfa2@group.calendar.google.com",
+          "mode": "id"
+        },
+        "start": "={{ $('Webhook').item.json.body.start_date }}",
+        "end": "={{ $('Webhook').item.json.body.end_date }}",
+        "additionalFields": {
+          "description": "=<div style=\"font-family: Arial, sans-serif; line-height: 1.6;\">\n\n  <h2>🌦️ Travel Weather Alert</h2>\n\n  <p>Dear Traveler,</p>\n\n  <p>\n    This is an automated weather alert for your upcoming trip.\n  </p>\n\n  <h3>📍 Trip Details</h3>\n\n  <p>\n    <strong>Destination:</strong>\n    {{ $('Webhook').item.json.body.destination }}\n    <br>\n    <strong>Travel Dates:</strong>\n    {{ $('Webhook').item.json.body.start_date }}\n    to\n    {{ $('Webhook').item.json.body.end_date }}\n  </p>\n\n  <h3>🌧️ Weather Update</h3>\n\n  <p>\n    Rain has been detected at your destination.\n    Please be prepared for wet weather conditions.\n  </p>\n\n  <h3>⚠️ Recommendations</h3>\n\n  <ul>\n    <li>Carry an umbrella or raincoat.</li>\n    <li>Check local weather conditions before outdoor activities.</li>\n    <li>Keep your travel plans flexible if required.</li>\n  </ul>\n\n  <h3>✈️ Travel Advisory</h3>\n\n  <p>\n    Please plan accordingly and stay updated with the latest\n    weather conditions during your journey.\n  </p>\n\n  <p>\n    We wish you a safe and enjoyable journey!\n  </p>\n\n  <hr>\n\n  <p>\n    <strong>Smart Tourism &amp; Travel Planning Platform</strong>\n  </p>\n\n</div>",
+          "summary": "=🌦️ Travel Weather Alert – {{ $('Webhook').item.json.body.destination }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "4e8e1a14-7c25-4e76-95f6-800e942958b1",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "8ejpFU7c7f8ZHjde",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b1d944ad-d258-4d32-b289-a1be3e838229",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f0a793f5b173af5808bfb4031c01c004f22c795ed3419b7cb30be1d388516fc"
+  },
+  "nodeGroups": [],
+  "id": "bzFgGpobDw2Kq6r8",
+  "tags": []
+}
