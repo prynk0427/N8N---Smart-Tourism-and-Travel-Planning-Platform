@@ -348,15 +348,15 @@ Replace `YOUR_N8N_TEST_WEBHOOK_URL` with the Test URL shown in the corresponding
 
 ```text
 Smart-Tourism-Travel-Planning/
-|
+|-- Screenshots
 |-- 01 - Customer Registration & Preferences.json
 |-- 02 - AI Destination Recommendation.json
 |-- 03 - Booking & Itinerary Management.json
 |-- 04 - Travel Alerts & Notifications.json
 |-- 05 - Feedback Collection & Travel Analytics.json
-|
-|-- architecture-diagram.png
-|
+|-- Demo Video
+|-- Presentation
+|-- Workflow Documentation
 `-- README.md
 ```
 
@@ -380,17 +380,16 @@ Smart-Tourism-Travel-Planning/
 
 # Screenshots
 
-Add screenshots of:
-
-- Overall architecture
 - Customer Registration workflow
+
+  ![Customer Registration Workflow]
+  (Screenshots%20-%20n8n/workflow-1.png)
+  
 - AI Destination Recommendation workflow
 - Booking & Itinerary workflow
 - Travel Alerts workflow
 - Feedback & Analytics workflow
-- Google Sheets output
-- Gmail output
-- Google Calendar output
+  
 
 ---
 
