@@ -380,15 +380,27 @@ Smart-Tourism-Travel-Planning/
 
 # Screenshots
 
-- Customer Registration workflow
+# 📸 Screenshots
 
-  ![Customer Registration Workflow]
-  (Screenshots%20-%20n8n/workflow-1.png)
-  
-- AI Destination Recommendation workflow
-- Booking & Itinerary workflow
-- Travel Alerts workflow
-- Feedback & Analytics workflow
+## 1. Customer Registration & Preferences
+
+![Customer Registration Workflow](Screenshots%20-%20n8n/workflow-1.png)
+
+## 2. AI Destination Recommendation
+
+![AI Destination Recommendation](Screenshots%20-%20n8n/workflow-2.png)
+
+## 3. Booking & Itinerary Management
+
+![Booking & Itinerary Management](Screenshots%20-%20n8n/workflow-3.png)
+
+## 4. Travel Alerts & Notifications
+
+![Travel Alerts & Notifications](Screenshots%20-%20n8n/workflow-4.png)
+
+## 5. Feedback Collection & Travel Analytics
+
+![Feedback & Analytics](Screenshots%20-%20n8n/workflow-5.png)
   
 
 ---
